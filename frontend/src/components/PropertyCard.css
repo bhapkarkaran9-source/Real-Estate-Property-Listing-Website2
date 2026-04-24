@@ -1,0 +1,62 @@
+.prop-card {
+  display: flex; flex-direction: column;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  cursor: pointer; text-decoration: none; color: inherit;
+}
+.prop-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--gold);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5), var(--shadow-gold);
+}
+
+/* Image */
+.prop-card__img-wrap { position: relative; height: 220px; overflow: hidden; }
+.prop-card__img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 0.5s ease;
+}
+.prop-card:hover .prop-card__img { transform: scale(1.07); }
+.prop-card__overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 60%);
+}
+
+/* Badges */
+.prop-card__badges {
+  position: absolute; top: 12px; left: 12px;
+  display: flex; gap: 6px; flex-wrap: wrap;
+}
+
+/* Fav button */
+.fav-btn {
+  position: absolute; top: 10px; right: 10px;
+  background: rgba(0,0,0,0.5); border: none; border-radius: 50%;
+  width: 36px; height: 36px; font-size: 1rem;
+  display: flex; align-items: center; justify-content: center;
+  backdrop-filter: blur(4px); transition: var(--transition);
+}
+.fav-btn:hover { background: rgba(0,0,0,0.75); transform: scale(1.15); }
+.fav-btn--active { background: rgba(239,68,68,0.3); }
+
+/* Body */
+.prop-card__body { padding: 16px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+.prop-card__price {
+  font-family: var(--font-head); font-size: 1.35rem; font-weight: 800;
+  color: var(--gold);
+}
+.prop-card__title {
+  font-size: 0.97rem; font-weight: 600; color: var(--text-primary);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.prop-card__loc { font-size: 0.82rem; color: var(--text-secondary); }
+.prop-card__meta {
+  display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px;
+  padding-top: 10px; border-top: 1px solid var(--border);
+  font-size: 0.78rem; color: var(--text-muted);
+}
+.prop-card__meta span { display: flex; align-items: center; gap: 4px; }

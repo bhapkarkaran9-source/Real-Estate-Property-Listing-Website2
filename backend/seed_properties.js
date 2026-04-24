@@ -1,0 +1,96 @@
+const db = require('./config/db');
+require('dotenv').config();
+
+const OWNER = 10; // Rajesh Kumar (seller)
+
+const properties = [
+  // ── MUMBAI ──────────────────────────────────────────────────
+  { title: '1 BHK Apartment in Andheri East', description: 'Compact and well-maintained 1 BHK near metro station.', price: 7500000, price_type: 'sale', property_type: 'flat', bhk: 1, area_sqft: 650, location_city: 'Mumbai', location_area: 'Andheri East', location_address: 'Marol Naka, Andheri East, Mumbai - 400059', latitude: 19.1176, longitude: 72.8796, amenities: '["Parking","Security","Elevator","Power Backup"]', status: 'approved' },
+  { title: '4 BHK Penthouse in Worli', description: 'Ultra-luxury sea-view penthouse with private terrace and infinity pool access.', price: 120000000, price_type: 'sale', property_type: 'flat', bhk: 4, area_sqft: 5200, location_city: 'Mumbai', location_area: 'Worli', location_address: 'Worli Sea Face, Mumbai - 400018', latitude: 18.9986, longitude: 72.8159, amenities: '["Infinity Pool","Gym","Concierge","3 Car Parking","Home Theatre","Smart Home"]', status: 'approved' },
+  { title: '2 BHK Flat for Rent in Powai', description: 'Semi-furnished flat in gated society near Hiranandani.', price: 45000, price_type: 'rent', property_type: 'flat', bhk: 2, area_sqft: 1050, location_city: 'Mumbai', location_area: 'Powai', location_address: 'Hiranandani Gardens, Powai, Mumbai - 400076', latitude: 19.1195, longitude: 72.9054, amenities: '["Gym","Swimming Pool","Parking","Security","Club House"]', status: 'approved' },
+  { title: 'Commercial Shop in Dadar', description: 'Ground floor commercial space in high foot-traffic area.', price: 18000000, price_type: 'sale', property_type: 'commercial', bhk: null, area_sqft: 420, location_city: 'Mumbai', location_area: 'Dadar', location_address: 'Dadar West, Mumbai - 400028', latitude: 19.0178, longitude: 72.8478, amenities: '["CCTV","Power Backup","Water Supply"]', status: 'approved' },
+  { title: '3 BHK Villa in Thane', description: 'Independent villa with garden and modular kitchen on Mumbai outskirts.', price: 32000000, price_type: 'sale', property_type: 'villa', bhk: 3, area_sqft: 2800, location_city: 'Mumbai', location_area: 'Thane West', location_address: 'Ghodbunder Road, Thane West - 400607', latitude: 19.2637, longitude: 72.9644, amenities: '["Private Garden","Parking","CCTV","Power Backup","Children Play Area"]', status: 'approved' },
+
+  // ── DELHI / NCR ──────────────────────────────────────────────
+  { title: '2 BHK Flat in Dwarka', description: 'Well-maintained apartment close to metro and schools.', price: 9500000, price_type: 'sale', property_type: 'flat', bhk: 2, area_sqft: 1100, location_city: 'Delhi', location_area: 'Dwarka Sector 12', location_address: 'Dwarka Sector 12, New Delhi - 110078', latitude: 28.5921, longitude: 77.0461, amenities: '["Parking","Gym","Security","Elevator","Power Backup"]', status: 'approved' },
+  { title: '5 BHK Farmhouse in Chattarpur', description: 'Sprawling farmhouse with lush green lawns, pool and event spaces.', price: 200000000, price_type: 'sale', property_type: 'villa', bhk: 5, area_sqft: 10000, location_city: 'Delhi', location_area: 'Chattarpur', location_address: 'Chattarpur Enclave, New Delhi - 110074', latitude: 28.4997, longitude: 77.1703, amenities: '["Swimming Pool","Lawn","Staff Quarters","4 Car Parking","Gym","CCTV"]', status: 'approved' },
+  { title: '1 BHK for Rent in Lajpat Nagar', description: 'Furnished 1 BHK ideal for working professionals near metro.', price: 22000, price_type: 'rent', property_type: 'flat', bhk: 1, area_sqft: 580, location_city: 'Delhi', location_area: 'Lajpat Nagar', location_address: 'Lajpat Nagar II, New Delhi - 110024', latitude: 28.5677, longitude: 77.2432, amenities: '["Furnished","WiFi","Security","Power Backup"]', status: 'approved' },
+  { title: 'Plot in Rohini', description: 'Freehold residential plot in prime Rohini locality.', price: 12000000, price_type: 'sale', property_type: 'plot', bhk: null, area_sqft: 1800, location_city: 'Delhi', location_area: 'Rohini Sector 9', location_address: 'Rohini Sector 9, New Delhi - 110085', latitude: 28.7218, longitude: 77.1038, amenities: '["Gated Area","Water Supply","Electricity","Road Access"]', status: 'approved' },
+  { title: 'Office Space for Rent in Connaught Place', description: 'Premium furnished office in heart of Delhi CBD.', price: 150000, price_type: 'rent', property_type: 'commercial', bhk: null, area_sqft: 1800, location_city: 'Delhi', location_area: 'Connaught Place', location_address: 'Block F, Connaught Place, New Delhi - 110001', latitude: 28.6315, longitude: 77.2167, amenities: '["Fully Furnished","24x7 Power","High-speed Internet","Conference Room","Cafeteria"]', status: 'approved' },
+
+  // ── BANGALORE ────────────────────────────────────────────────
+  { title: '3 BHK Flat in Indiranagar', description: 'Spacious apartment in premium Bangalore locality near pubs and cafes.', price: 15000000, price_type: 'sale', property_type: 'flat', bhk: 3, area_sqft: 1650, location_city: 'Bangalore', location_area: 'Indiranagar', location_address: '100 Feet Road, Indiranagar, Bengaluru - 560038', latitude: 12.9784, longitude: 77.6408, amenities: '["Gym","Swimming Pool","Parking","Club House","CCTV"]', status: 'approved' },
+  { title: '4 BHK Villa in Sarjapur Road', description: 'Luxury villa in gated community with all modern amenities.', price: 65000000, price_type: 'sale', property_type: 'villa', bhk: 4, area_sqft: 4000, location_city: 'Bangalore', location_area: 'Sarjapur Road', location_address: 'Sarjapur Road, Bengaluru - 560102', latitude: 12.9018, longitude: 77.6849, amenities: '["Swimming Pool","Home Theatre","Gym","3 Car Parking","Smart Home","Garden"]', status: 'approved' },
+  { title: '1 BHK for Rent in HSR Layout', description: 'Fully furnished 1 BHK in vibrant HSR Layout, close to tech parks.', price: 18000, price_type: 'rent', property_type: 'flat', bhk: 1, area_sqft: 620, location_city: 'Bangalore', location_area: 'HSR Layout', location_address: 'Sector 7, HSR Layout, Bengaluru - 560102', latitude: 12.9121, longitude: 77.6446, amenities: '["Fully Furnished","WiFi","Parking","Security","Power Backup"]', status: 'approved' },
+  { title: 'IT Office Space in Electronic City', description: 'Grade-A office park in heart of Bangalore IT hub.', price: 90000, price_type: 'rent', property_type: 'commercial', bhk: null, area_sqft: 3000, location_city: 'Bangalore', location_area: 'Electronic City', location_address: 'Electronic City Phase 1, Bengaluru - 560100', latitude: 12.8445, longitude: 77.6608, amenities: '["24x7 Power","High-speed Internet","Cafeteria","Parking","Conference Rooms","Security"]', status: 'approved' },
+  { title: '2 BHK House for Rent in Jayanagar', description: 'Independent house with terrace in one of Bangalore oldest localities.', price: 28000, price_type: 'rent', property_type: 'house', bhk: 2, area_sqft: 1100, location_city: 'Bangalore', location_area: 'Jayanagar', location_address: '4th Block, Jayanagar, Bengaluru - 560011', latitude: 12.9254, longitude: 77.5839, amenities: '["Terrace","Parking","Garden","Security","Bore Well"]', status: 'approved' },
+
+  // ── HYDERABAD ────────────────────────────────────────────────
+  { title: '3 BHK Flat in Jubilee Hills', description: 'Premium flat in Hyderabad most upscale neighbourhood.', price: 18000000, price_type: 'sale', property_type: 'flat', bhk: 3, area_sqft: 1850, location_city: 'Hyderabad', location_area: 'Jubilee Hills', location_address: 'Road No. 36, Jubilee Hills, Hyderabad - 500033', latitude: 17.4318, longitude: 78.4073, amenities: '["Gym","Swimming Pool","Parking","CCTV","24x7 Security","Power Backup"]', status: 'approved' },
+  { title: '5 BHK Villa in Gachibowli', description: 'Modern villa near IT corridor with smart home automation.', price: 75000000, price_type: 'sale', property_type: 'villa', bhk: 5, area_sqft: 5500, location_city: 'Hyderabad', location_area: 'Gachibowli', location_address: 'Financial District, Gachibowli, Hyderabad - 500032', latitude: 17.4401, longitude: 78.3489, amenities: '["Smart Home","Pool","Gym","4 Car Parking","Home Theatre","Garden"]', status: 'approved' },
+  { title: '2 BHK Flat for Rent in Madhapur', description: 'Semi-furnished flat near HITEC City, perfect for IT professionals.', price: 32000, price_type: 'rent', property_type: 'flat', bhk: 2, area_sqft: 1100, location_city: 'Hyderabad', location_area: 'Madhapur', location_address: 'HITEC City, Madhapur, Hyderabad - 500081', latitude: 17.4486, longitude: 78.3908, amenities: '["Parking","Gym","Swimming Pool","Security","Power Backup"]', status: 'approved' },
+  { title: 'Residential Plot in Kompally', description: 'HMDA approved plot in rapidly growing north Hyderabad.', price: 4500000, price_type: 'sale', property_type: 'plot', bhk: null, area_sqft: 1200, location_city: 'Hyderabad', location_area: 'Kompally', location_address: 'Kompally, Secunderabad - 500014', latitude: 17.5408, longitude: 78.4869, amenities: '["HMDA Approved","Gated Layout","Water Supply","Electricity","Wide Roads"]', status: 'approved' },
+
+  // ── PUNE ─────────────────────────────────────────────────────
+  { title: '2 BHK Flat in Baner', description: 'Modern apartment in one of Pune fastest-growing IT areas.', price: 9200000, price_type: 'sale', property_type: 'flat', bhk: 2, area_sqft: 1050, location_city: 'Pune', location_area: 'Baner', location_address: 'Baner Road, Pune - 411045', latitude: 18.5590, longitude: 73.7868, amenities: '["Gym","Parking","Swimming Pool","Club House","Children Play Area"]', status: 'approved' },
+  { title: '4 BHK Villa in Koregaon Park', description: 'Luxurious bungalow in Pune most premium address.', price: 55000000, price_type: 'sale', property_type: 'villa', bhk: 4, area_sqft: 4500, location_city: 'Pune', location_area: 'Koregaon Park', location_address: 'Lane 5, Koregaon Park, Pune - 411001', latitude: 18.5362, longitude: 73.8939, amenities: '["Private Pool","Garden","3 Car Parking","Staff Quarters","Smart Home","CCTV"]', status: 'approved' },
+  { title: '1 BHK for Rent in Wakad', description: 'Affordable furnished studio near Pimpri-Chinchwad IT belt.', price: 14000, price_type: 'rent', property_type: 'flat', bhk: 1, area_sqft: 580, location_city: 'Pune', location_area: 'Wakad', location_address: 'Wakad, Pune - 411057', latitude: 18.5989, longitude: 73.7614, amenities: '["Furnished","Parking","Security","Power Backup","WiFi"]', status: 'approved' },
+  { title: 'IT Office in Magarpatta City', description: 'Prestigious office space in Magarpatta self-contained township.', price: 110000, price_type: 'rent', property_type: 'commercial', bhk: null, area_sqft: 2500, location_city: 'Pune', location_area: 'Magarpatta', location_address: 'Magarpatta City, Hadapsar, Pune - 411028', latitude: 18.5089, longitude: 73.9259, amenities: '["24x7 Power","Cafeteria","Parking","Conference Rooms","High-speed Internet"]', status: 'approved' },
+  { title: '3 BHK House in Kothrud', description: 'Spacious independent house in established western Pune locality.', price: 22000000, price_type: 'sale', property_type: 'house', bhk: 3, area_sqft: 2200, location_city: 'Pune', location_area: 'Kothrud', location_address: 'Karve Road, Kothrud, Pune - 411038', latitude: 18.5074, longitude: 73.8077, amenities: '["Parking","Garden","Security","Power Backup","Bore Well"]', status: 'approved' },
+
+  // ── CHENNAI ──────────────────────────────────────────────────
+  { title: '3 BHK Apartment in Anna Nagar', description: 'Well-connected apartment in one of Chennai prime localities.', price: 14000000, price_type: 'sale', property_type: 'flat', bhk: 3, area_sqft: 1600, location_city: 'Chennai', location_area: 'Anna Nagar', location_address: '2nd Avenue, Anna Nagar, Chennai - 600040', latitude: 13.0850, longitude: 80.2101, amenities: '["Parking","Gym","Security","Elevator","Power Backup","Water Supply"]', status: 'approved' },
+  { title: '4 BHK Villa in ECR', description: 'Beach road villa with sea view and private garden on East Coast Road.', price: 60000000, price_type: 'sale', property_type: 'villa', bhk: 4, area_sqft: 4800, location_city: 'Chennai', location_area: 'ECR', location_address: 'East Coast Road, Neelankarai, Chennai - 600041', latitude: 12.9435, longitude: 80.2474, amenities: '["Sea View","Pool","Garden","3 Car Parking","CCTV","Backup Generator"]', status: 'approved' },
+  { title: '2 BHK for Rent in OMR', description: 'Modern flat on IT Expressway, close to major tech parks.', price: 25000, price_type: 'rent', property_type: 'flat', bhk: 2, area_sqft: 1000, location_city: 'Chennai', location_area: 'OMR Perungudi', location_address: 'Perungudi, OMR, Chennai - 600096', latitude: 12.9617, longitude: 80.2437, amenities: '["Parking","Gym","Swimming Pool","Security","Club House"]', status: 'approved' },
+  { title: 'Commercial Space in T. Nagar', description: 'Retail showroom space in Chennai busiest shopping district.', price: 25000000, price_type: 'sale', property_type: 'commercial', bhk: null, area_sqft: 800, location_city: 'Chennai', location_area: 'T. Nagar', location_address: 'Usman Road, T. Nagar, Chennai - 600017', latitude: 13.0418, longitude: 80.2341, amenities: '["CCTV","Power Backup","Loading Dock","Water Supply"]', status: 'approved' },
+
+  // ── KOLKATA ──────────────────────────────────────────────────
+  { title: '3 BHK Flat in Salt Lake City', description: 'Spacious apartment in planned township, great connectivity.', price: 11000000, price_type: 'sale', property_type: 'flat', bhk: 3, area_sqft: 1750, location_city: 'Kolkata', location_area: 'Salt Lake Sector V', location_address: 'Sector V, Salt Lake City, Kolkata - 700091', latitude: 22.5805, longitude: 88.4286, amenities: '["Parking","Security","Gym","Power Backup","Club House"]', status: 'approved' },
+  { title: '5 BHK Bungalow in Alipore', description: 'Heritage-styled bungalow in Kolkata most elite neighbourhood.', price: 150000000, price_type: 'sale', property_type: 'villa', bhk: 5, area_sqft: 8000, location_city: 'Kolkata', location_area: 'Alipore', location_address: 'Alipore Road, Kolkata - 700027', latitude: 22.5347, longitude: 88.3391, amenities: '["Grand Garden","Pool","Staff Quarters","4 Car Parking","CCTV","Generator"]', status: 'approved' },
+  { title: '2 BHK for Rent in New Town', description: 'Modern flat in Kolkata new IT township near Eco Park.', price: 20000, price_type: 'rent', property_type: 'flat', bhk: 2, area_sqft: 1000, location_city: 'Kolkata', location_area: 'New Town Rajarhat', location_address: 'Action Area II, New Town, Kolkata - 700156', latitude: 22.5849, longitude: 88.4823, amenities: '["Parking","Security","Gym","Power Backup","Children Play Area"]', status: 'approved' },
+  { title: 'Office Space in Park Street', description: 'Prestigious office address on Kolkata most iconic street.', price: 85000, price_type: 'rent', property_type: 'commercial', bhk: null, area_sqft: 2000, location_city: 'Kolkata', location_area: 'Park Street', location_address: 'Park Street, Kolkata - 700016', latitude: 22.5521, longitude: 88.3525, amenities: '["Furnished","24x7 Power","High-speed Internet","Conference Room","Security"]', status: 'approved' },
+
+  // ── AHMEDABAD ────────────────────────────────────────────────
+  { title: '3 BHK Flat in SG Highway', description: 'Premium apartment along Ahmedabad premier residential corridor.', price: 13000000, price_type: 'sale', property_type: 'flat', bhk: 3, area_sqft: 1700, location_city: 'Ahmedabad', location_area: 'SG Highway', location_address: 'Prahlad Nagar, SG Highway, Ahmedabad - 380015', latitude: 23.0225, longitude: 72.5037, amenities: '["Gym","Swimming Pool","Parking","Club House","CCTV","Power Backup"]', status: 'approved' },
+  { title: '4 BHK Villa in Bopal', description: 'Modern villa in gated community in rapidly developing west Ahmedabad.', price: 35000000, price_type: 'sale', property_type: 'villa', bhk: 4, area_sqft: 3800, location_city: 'Ahmedabad', location_area: 'Bopal', location_address: 'South Bopal, Ahmedabad - 380058', latitude: 23.0285, longitude: 72.4690, amenities: '["Pool","Garden","3 Car Parking","Gym","Smart Home","CCTV"]', status: 'approved' },
+  { title: '2 BHK for Rent in Satellite', description: 'Centrally located flat, minutes from malls and offices.', price: 18000, price_type: 'rent', property_type: 'flat', bhk: 2, area_sqft: 1000, location_city: 'Ahmedabad', location_area: 'Satellite', location_address: 'Anandnagar Road, Satellite, Ahmedabad - 380015', latitude: 23.0297, longitude: 72.5228, amenities: '["Parking","Security","Power Backup","Water Supply","Elevator"]', status: 'approved' },
+  { title: 'Commercial Plot in GIFT City', description: 'Freehold commercial plot in Gujarat International Finance Tec-City.', price: 20000000, price_type: 'sale', property_type: 'plot', bhk: null, area_sqft: 2000, location_city: 'Ahmedabad', location_area: 'GIFT City Gandhinagar', location_address: 'GIFT City, Gandhinagar - 382355', latitude: 23.1661, longitude: 72.6800, amenities: '["SEZ Benefits","24x7 Power","High-speed Internet","Wide Roads","Security"]', status: 'approved' },
+];
+
+// Unsplash images per property type
+const images = {
+  flat:       ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800','https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800'],
+  villa:      ['https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800'],
+  house:      ['https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=800','https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800'],
+  plot:       ['https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800','https://images.unsplash.com/photo-1470770903676-69b98201ea1c?w=800'],
+  commercial: ['https://images.unsplash.com/photo-1497366216548-37526070297c?w=800','https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=800'],
+};
+
+(async () => {
+  try {
+    let inserted = 0;
+    for (const p of properties) {
+      const [res] = await db.query(
+        `INSERT INTO properties (title, description, price, price_type, property_type, bhk, area_sqft,
+         location_city, location_area, location_address, latitude, longitude, amenities, status, owner_id)
+         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+        [p.title, p.description, p.price, p.price_type, p.property_type, p.bhk ?? null,
+         p.area_sqft, p.location_city, p.location_area, p.location_address,
+         p.latitude, p.longitude, p.amenities, p.status, OWNER]
+      );
+      const propId = res.insertId;
+      const imgs = images[p.property_type] || images.flat;
+      for (let i = 0; i < imgs.length; i++) {
+        await db.query('INSERT INTO property_images (property_id, image_url, is_primary) VALUES (?,?,?)',
+          [propId, imgs[i], i === 0 ? 1 : 0]);
+      }
+      inserted++;
+      console.log(`✅ [${inserted}/${properties.length}] ${p.location_city} - ${p.title}`);
+    }
+    console.log(`\n🏠 Done! ${inserted} properties added across 8 cities.`);
+    process.exit(0);
+  } catch (err) {
+    console.error('❌ Error:', err.message);
+    process.exit(1);
+  }
+})();

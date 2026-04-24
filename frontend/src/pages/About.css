@@ -1,0 +1,71 @@
+.about-hero {
+  padding: 100px 0 60px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(245,158,11,0.07) 0%, transparent 60%), var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+}
+.about-hero h1 { font-size: clamp(1.8rem, 4vw, 3rem); max-width: 700px; margin: 0 auto 16px; }
+.about-hero p  { color: var(--text-secondary); max-width: 580px; margin: 0 auto; line-height: 1.7; }
+.about-hero__stats { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; margin-top: 40px; }
+.about-stat { display: flex; flex-direction: column; gap: 4px; align-items: center; }
+.about-stat strong { font-size: 1.8rem; font-weight: 800; color: var(--gold); font-family: var(--font-head); }
+.about-stat span   { font-size: 0.8rem; color: var(--text-muted); }
+
+/* Mission */
+.about-mission { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+.mission-visual { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.mission-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 24px;
+  display: flex; flex-direction: column; gap: 6px; align-items: center; text-align: center;
+  transition: var(--transition);
+}
+.mission-card:hover { border-color: var(--gold); transform: translateY(-4px); }
+.mission-card span   { font-size: 1.8rem; }
+.mission-card strong { font-size: 1.3rem; font-weight: 800; color: var(--gold); }
+.mission-card small  { font-size: 0.75rem; color: var(--text-muted); }
+
+/* Timeline */
+.timeline { display: flex; flex-direction: column; gap: 0; max-width: 700px; margin: 0 auto; position: relative; }
+.timeline::before {
+  content: ''; position: absolute; left: 50%; transform: translateX(-50%);
+  top: 0; bottom: 0; width: 2px; background: var(--border);
+}
+.timeline-item {
+  display: flex; gap: 24px; align-items: center;
+  padding: 20px 0;
+}
+.timeline-item.right { flex-direction: row-reverse; }
+.timeline-year {
+  font-family: var(--font-head); font-weight: 800; font-size: 1.1rem;
+  color: var(--gold); min-width: 60px; text-align: center;
+  background: var(--bg-primary); padding: 4px;
+  position: relative; z-index: 1;
+}
+.timeline-content {
+  flex: 1; background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: 14px 18px;
+  font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6;
+}
+
+/* Team */
+.team-card { padding: 28px; text-align: center; display: flex; flex-direction: column; gap: 8px; align-items: center; }
+.team-emoji { font-size: 3rem; }
+.team-name  { font-size: 1rem; font-weight: 700; }
+.team-role  { font-size: 0.82rem; color: var(--text-muted); }
+
+/* About CTA */
+.about-cta {
+  text-align: center; padding: 60px 40px;
+  background: linear-gradient(135deg, #0d1b2e, #1a2c1a);
+  border: 1px solid var(--border); border-radius: var(--radius-xl);
+}
+.about-cta h2 { font-size: 2rem; }
+.about-cta p  { color: var(--text-secondary); margin-top: 10px; }
+
+@media (max-width: 768px) {
+  .about-mission { grid-template-columns: 1fr; }
+  .timeline::before { left: 30px; }
+  .timeline-item, .timeline-item.right { flex-direction: row; }
+  .timeline-year { min-width: 48px; font-size: 0.9rem; }
+}
