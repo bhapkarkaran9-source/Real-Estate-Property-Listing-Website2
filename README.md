@@ -260,3 +260,5 @@ contact_requests   → id, user_id, property_id, name, email, phone, message, st
 | Auth      | JWT + bcryptjs                |
 | Upload    | Multer (disk storage)         |
 | Toasts    | react-hot-toast               |
+#   R e a l - E s t a t e - P r o p e r t y - L i s t i n g - P r o j e c t  
+ 
